@@ -15,9 +15,9 @@ bin/test.out
 
 ## Attribution
 
-Stretchysalt is simply an implementation of a salting and stretching scheme outlined in Practical Cryptography. The authors of the book said that of all cryptography-related things, this was the easiest and most straight-forward to implement. So I did.
+Stretchysalt is simply an implementation of a salting and stretching scheme outlined in Practical Cryptography. The authors of the book said that out of all cryptography-related things that one could implement, this was the easiest and most straight-forward. So I did.
 
-Originally, this code was used in Oldentide in the server. However, it was eventually removed in favor of a nodejs webserver and bcrypt for account management, so I decided to break out the code, massage it a bit, and put it here.  
+Originally, this code was used in the Oldentide server code. However, it was eventually removed in favor of a nodejs webserver and bcrypt for account management. So I decided to break out the code, massage it a bit, and put it here.  
 
 ## TODO:
 
