@@ -1,0 +1,9 @@
+*.sublime-project
+*.sublime-workspace
+
+bin/
+
+*.out
+*.o
+*.obj
+*.exe
