@@ -1,5 +1,5 @@
 # Stretchysalt
-A password salting and stretching project (same idea as bcrypt).
+A password salting and stretching project (same idea as [bcrypt](https://en.wikipedia.org/wiki/Bcrypt)).
 
 ## How to use
 Run on Linux (Tested on Debian 8 - Jessse).
@@ -21,10 +21,12 @@ Originally, this code was used in the Oldentide server code. However, it was eve
 
 ## TODO:
 
-* Make it object oriented, so it is easy to set the iteration strength
-
 * Look into two types of modes: all-in-one mode, where the salt is stored with the key as a single value, and separate mode, where the salt and key are stored as separate and distinct values.
 
+* Look into using base64 or some other format to store values, like bcrypt.
+
 * Look into storing the # of iterations used, and reading that back in.
+
+* Make it object oriented, so it is easy to set the iteration strength
 
 * Add in warnings and checks
