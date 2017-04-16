@@ -33,15 +33,25 @@ int main(int argc, char const *argv[]) {
 
     std::string key_single2 = stchy.concatenate_key_single_value(salt, key);
     std::cout << "Concatenated key as single value: " << key_single2 << std::endl;
-    // TODO: Assert the length to be 264
+    // TODO: Assert the length to be 274
     std::cout << key_single2.length() << std::endl;
 
 
 
     std::string key_single = stchy.generate_key_single_value(password, salt);
     std::cout << "generate_key_single_value: " << key_single << std::endl;
-    // TODO: Assert the length to be 264
+    // TODO: Assert the length to be 274
     std::cout << key_single.length() << std::endl;
+
+
+    std::cout << "Get itr, salt, key from a key single value: "
+    << Stretchysalt::get_iterations_from_key_single_value(key_single)
+    << "----"
+    << Stretchysalt::get_salt_from_key_single_value(key_single)
+    << "----"
+    << Stretchysalt::get_key_from_key_single_value(key_single)
+    << std::endl;
+
 
 
 

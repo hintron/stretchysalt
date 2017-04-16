@@ -2,8 +2,10 @@
 
 #include <cstdio>
 #include <cstring>
+#include <iostream>
 #include <iomanip>
 #include <sstream>
+#include <cstdint>
 #include <openssl/evp.h>
 #include <openssl/bn.h>
 #include "Stretchysalt.h"
@@ -19,7 +21,7 @@
 // NOTE: The generated key depends on the number of iterations.
 // For default params - see https://en.wikipedia.org/wiki/C%2B%2B_classes#Constructors
 // Doing it this way to initialize a const
-Stretchysalt::Stretchysalt(long long int itr) : ITERATIONS(itr) {}
+Stretchysalt::Stretchysalt(uint64_t itr) : ITERATIONS(itr) {}
 
 // Destructor
 Stretchysalt::~Stretchysalt() {}
@@ -68,7 +70,7 @@ std::string Stretchysalt::generate_key(std::string password_in, std::string salt
     }
 
     //printf("Iterations: %llu\n", ITERATIONS);
-    for (long long i = 0; i < ITERATIONS; ++i) {
+    for (uint64_t i = 0; i < ITERATIONS; ++i) {
         md_context = EVP_MD_CTX_create();
         EVP_DigestInit(md_context, md_function);
         // Append the previous hash, password, and salt together in this order:
@@ -98,7 +100,7 @@ std::string Stretchysalt::generate_key(std::string password_in, std::string salt
     generated_key_string_hex_temp = BN_bn2hex(generated_key);
 
     // Copy the contents to a c++ string
-    std::string temp3(generated_key_string_hex_temp);
+    std::string key_string(generated_key_string_hex_temp);
 
     //printf("Final key in hex:\n%s\n", generated_key_string_hex);
     // Free the malloced temp key string
@@ -108,7 +110,7 @@ std::string Stretchysalt::generate_key(std::string password_in, std::string salt
     BN_clear_free(generated_key);
     BN_clear_free(salt);
 
-    return temp3;
+    return key_string;
 }
 
 
@@ -122,18 +124,10 @@ std::string Stretchysalt::generate_key_single_value(std::string password_in, std
 
 
 std::string Stretchysalt::concatenate_key_single_value(std::string salt_hex, std::string key_hex){
-    // Single-value:
-    // iterations-salt-key
-    // bits = 64 + 512 + 512 = 1088 bits
-    // Convert to hex string - 1 char for every 4 bits
-    // chars = 16 + 128 + 128 = 272 chars
-    // 272 characters + 2 delimiters = 274 characters
-
-
     // Convert ITERATIONS into a constant-width hex string
     // See http://stackoverflow.com/questions/5100718/integer-to-hex-string-in-c
     std::stringstream single_value_ss;
-    single_value_ss << std::setfill ('0') << std::setw(sizeof(ITERATIONS)*2) << std::hex << ITERATIONS;
+    single_value_ss << std::setfill('0') << std::setw(sizeof(ITERATIONS)*2) << std::hex << ITERATIONS;
 
     // Add in the salt and key
     // Use | delimiter, since I want the single-value key to be somewhat human-readable
@@ -141,7 +135,7 @@ std::string Stretchysalt::concatenate_key_single_value(std::string salt_hex, std
 
 
     // Create a single string
-    std::string single_value( single_value_ss.str() );
+    std::string single_value(single_value_ss.str());
 
     return single_value;
 }
@@ -174,6 +168,40 @@ std::string Stretchysalt::generate_salt() {
     // Return a copy of the string
     return salt_string;
 }
+
+
+// NOTE: the function returns by value, so it makes a copy of std::string
+std::string Stretchysalt::get_key_from_key_single_value(std::string key_single_value) {
+    // Check length
+    if(key_single_value.length() != KEY_SINGLE_VALUE_LENGTH){
+        std::cout << "key_single_value is not 274 characters long! Something is wrong." << std::endl;
+        exit(1);
+    }
+
+    return key_single_value.substr(17+129, 128);
+}
+
+std::string Stretchysalt::get_salt_from_key_single_value(std::string key_single_value) {
+    // Check length
+    if(key_single_value.length() != KEY_SINGLE_VALUE_LENGTH){
+        std::cout << "key_single_value is not 274 characters long! Something is wrong." << std::endl;
+        exit(1);
+    }
+
+    return key_single_value.substr(17, 128);
+}
+
+std::string Stretchysalt::get_iterations_from_key_single_value(std::string key_single_value) {
+    // Check length
+    if(key_single_value.length() != KEY_SINGLE_VALUE_LENGTH){
+        std::cout << "key_single_value is not 274 characters long! Something is wrong." << std::endl;
+        exit(1);
+    }
+
+    return key_single_value.substr(0, 16);
+}
+
+
 
 
 
