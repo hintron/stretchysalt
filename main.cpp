@@ -6,6 +6,9 @@
 // Example usage
 int main(int argc, char const *argv[]) {
 
+    Stretchysalt stchy;
+    // Stretchysalt stchy(2<<22);
+
     std::cout << "Password: ";
     std::string password;
 
@@ -23,7 +26,7 @@ int main(int argc, char const *argv[]) {
     // std::cout << "Generated salt length: " << salt.length() << std::endl;
 
 
-    std::string key = Stretchysalt::generate_key(password, salt);
+    std::string key = stchy.generate_key(password, salt);
 
     std::cout << "Generated key: " << key << std::endl;
     // std::cout << "Generated key length: " << key.length() << std::endl;
@@ -42,7 +45,7 @@ int main(int argc, char const *argv[]) {
     std::cin >> salt2;
     std::cout << "You entered " << salt2 << std::endl;
 
-    std::string key2 = Stretchysalt::generate_key(password2, salt2);
+    std::string key2 = stchy.generate_key(password2, salt2);
 
     std::cout << "Generated key: " << key2 << std::endl;
     // std::cout << "Generated key length: " << key2.length() << std::endl;

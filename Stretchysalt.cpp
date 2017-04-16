@@ -1,17 +1,21 @@
 // OpenSSL 1.0.2h needs to be installed on the system! It is the LTS solution and will be supported until Dec 2019
 
-#include <stdio.h>
+#include <cstdio>
+#include <cstring>
 #include <openssl/evp.h>
-#include <string.h>
 #include <openssl/bn.h>
 #include "Stretchysalt.h"
 
+
+// Constructor
 // Iterations should be calibrated so the whole process takes 200-1000 ms
 // If it is any quicker, it defeats the point of salting and stretching!
 // 2^20 iterations will effectively add 20 bits to the password
 // NOTE: The generated key depends on the number of iterations.
-const long long int Stretchysalt::ITERATIONS = 1 << 20;
-// const long long int Stretchysalt::ITERATIONS = 1 << 2;
+Stretchysalt::Stretchysalt(long long int itr) : ITERATIONS(itr) {}
+
+// Destructor
+Stretchysalt::~Stretchysalt() {}
 
 // CLIENT. Takes a password of any length and a 512-bit salt and calculates a 512-bit key.
 // Uses the OpenSSL implementation of sha512.

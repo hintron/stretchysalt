@@ -9,14 +9,16 @@
 
 class Stretchysalt {
     public:
-        Stretchysalt();
+        // Constructor - Make ITERATIONS default to 2^20
+        Stretchysalt(long long int = 2<<20);
         ~Stretchysalt();
         static std::string generate_salt();
-        static std::string generate_key(std::string, std::string);
-        // TODO:
+        // static std::string generate_key(std::string, std::string);
+        std::string generate_key(std::string, std::string);
+        // TODO: Store salt, key, and iterations together into a single value
         // static std::string generate_salt_and_key(std::string);
     private:
-        static const long long int ITERATIONS;
+        const long long int ITERATIONS;
 };
 
 #endif // STRETCHYSALT_H
