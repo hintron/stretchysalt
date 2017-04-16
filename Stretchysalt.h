@@ -15,8 +15,12 @@ class Stretchysalt {
         static std::string generate_salt();
         // static std::string generate_key(std::string, std::string);
         std::string generate_key(std::string, std::string);
-        // TODO: Store salt, key, and iterations together into a single value
         // static std::string generate_salt_and_key(std::string);
+
+        // Store salt, key, and iterations together into a single value
+        std::string generate_key_single_value(std::string, std::string);
+        std::string concatenate_key_single_value(std::string, std::string);
+
     private:
         const long long int ITERATIONS;
 };

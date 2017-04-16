@@ -7,7 +7,7 @@
 int main(int argc, char const *argv[]) {
 
     Stretchysalt stchy;
-    // Stretchysalt stchy(2<<22);
+    // Stretchysalt stchy(15);
 
     std::cout << "Password: ";
     std::string password;
@@ -30,6 +30,18 @@ int main(int argc, char const *argv[]) {
 
     std::cout << "Generated key: " << key << std::endl;
     // std::cout << "Generated key length: " << key.length() << std::endl;
+
+    std::string key_single2 = stchy.concatenate_key_single_value(salt, key);
+    std::cout << "Concatenated key as single value: " << key_single2 << std::endl;
+    // TODO: Assert the length to be 264
+    std::cout << key_single2.length() << std::endl;
+
+
+
+    std::string key_single = stchy.generate_key_single_value(password, salt);
+    std::cout << "generate_key_single_value: " << key_single << std::endl;
+    // TODO: Assert the length to be 264
+    std::cout << key_single.length() << std::endl;
 
 
 

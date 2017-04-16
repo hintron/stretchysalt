@@ -2,9 +2,14 @@
 
 #include <cstdio>
 #include <cstring>
+#include <iomanip>
+#include <sstream>
 #include <openssl/evp.h>
 #include <openssl/bn.h>
 #include "Stretchysalt.h"
+
+
+
 
 
 // Constructor
@@ -12,6 +17,8 @@
 // If it is any quicker, it defeats the point of salting and stretching!
 // 2^20 iterations will effectively add 20 bits to the password
 // NOTE: The generated key depends on the number of iterations.
+// For default params - see https://en.wikipedia.org/wiki/C%2B%2B_classes#Constructors
+// Doing it this way to initialize a const
 Stretchysalt::Stretchysalt(long long int itr) : ITERATIONS(itr) {}
 
 // Destructor
@@ -104,6 +111,44 @@ std::string Stretchysalt::generate_key(std::string password_in, std::string salt
     return temp3;
 }
 
+
+
+std::string Stretchysalt::generate_key_single_value(std::string password_in, std::string salt_string_hex){
+    // Generate the key from the salt and password
+    std::string key_hex = generate_key(password_in, salt_string_hex);
+    // Concatenate the iterations, salt, and password, and return as a single value
+    return Stretchysalt::concatenate_key_single_value(salt_string_hex, key_hex);
+}
+
+
+std::string Stretchysalt::concatenate_key_single_value(std::string salt_hex, std::string key_hex){
+    // Single-value:
+    // iterations-salt-key
+    // bits = 64 + 512 + 512 = 1088 bits
+    // Convert to hex string - 1 char for every 4 bits
+    // chars = 16 + 128 + 128 = 272 chars
+    // 272 characters + 2 delimiters = 274 characters
+
+
+    // Convert ITERATIONS into a constant-width hex string
+    // See http://stackoverflow.com/questions/5100718/integer-to-hex-string-in-c
+    std::stringstream single_value_ss;
+    single_value_ss << std::setfill ('0') << std::setw(sizeof(ITERATIONS)*2) << std::hex << ITERATIONS;
+
+    // Add in the salt and key
+    // Use | delimiter, since I want the single-value key to be somewhat human-readable
+    single_value_ss << "|" << salt_hex << "|" << key_hex;
+
+
+    // Create a single string
+    std::string single_value( single_value_ss.str() );
+
+    return single_value;
+}
+
+
+
+
 // NOTE: the function returns by value, so it makes a copy of std::string
 std::string Stretchysalt::generate_salt() {
     // Initialize salt and generated key BIGNUMs
@@ -129,6 +174,7 @@ std::string Stretchysalt::generate_salt() {
     // Return a copy of the string
     return salt_string;
 }
+
 
 
 // TODO: Create a format where the key and salt are together in a single value, for ease of use
